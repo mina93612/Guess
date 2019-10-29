@@ -5,6 +5,7 @@ import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -18,9 +19,10 @@ import android.widget.TextView;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-     String TAG =MainActivity.class.getSimpleName();
-     private EditText number;
-     int secret = new Random().nextInt(10)+1;
+    int guesstime;
+    String TAG = MainActivity.class.getSimpleName();
+    private EditText number;
+    int secret = new Random().nextInt(10) + 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,34 +30,55 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        number=findViewById(R.id.inform);
-        Log.d(TAG,"Secret:"+secret);
+        number = findViewById(R.id.ed_num);
+        Log.d(TAG, "Secret:" + secret);
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener()
-        {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
             }
         });
     }
-    public void Guess (View view){
+
+    public void Guess(View view) {
+        guesstime += 1;
+        TextView times = findViewById(R.id.times);
         TextView inform = findViewById(R.id.inform);
-        int num = Integer.parseInt(number.getText().toString());
-        if (num>secret){
-            inform.setText("Bigger!!");
+        int num = Integer.parseInt(String.valueOf(number.getText().toString()));
+        if (num > secret) {
+            new AlertDialog.Builder(this)
+                    .setMessage("Smaller")
+                    .setTitle("result")
+                    .show();
+
+            // inform.setText("Smaller!!");
         } else if (num < secret) {
-            inform.setText("Smaller!!");
-        }else
-            inform.setText("Bingo!!!");
+            // inform.setText("!Bigger!");
+            new AlertDialog.Builder(this)
+                    .setMessage("Bigger")
+                    .setTitle("result")
+                    .show();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setMessage("Bingo")
+                    .setTitle("result")
+                    .setPositiveButton("OK", null)
+                    .show();
+            //inform.setText("Bingo!!!");
+        }
+        times.setText("猜了"+guesstime+"次");
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
+
     }
 
     @Override
